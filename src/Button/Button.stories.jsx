@@ -4,6 +4,9 @@ import { Button } from './Button';
 import { Icon } from '../Icon/Icon';
 import { StoryLinkWrapper } from '../LinkWrapper';
 
+import { userEvent, within } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
+
 
 const CustomButton = styled.button`
   border: 1px solid green;
@@ -327,3 +330,19 @@ export const AnchorWrapper = {
   ),
 };
 
+export const WithInteractionStates = {
+  args: {
+    appearance: 'primary',
+    href: 'http://storybook.js.org',
+    ButtonWrapper: StoryLinkWrapper,
+    children: 'Button',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('link'));
+    expect(canvas.getByRole('link')).toHaveAttribute(
+      'href',
+      'http://storybook.js.org',
+    );
+  },
+};
